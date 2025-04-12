@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.lang.reflect.Method;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -45,17 +47,18 @@ public class SecurityConfig {
 
 
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/file/**").permitAll()
 
                 // Example: Admin-only
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/books/**").hasRole("ADMIN")
 
-
-                .requestMatchers("/api/book/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/books/**").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/books/**").hasAnyRole("USER","ADMIN")
 
 
                 .requestMatchers("/api/**").authenticated()
 
-                // All other requests
+
                 .anyRequest().authenticated()
         );
 

@@ -38,6 +38,7 @@ public class AuthController {
     public HttpEntity<?> register(@RequestBody UserDto user) {
         return userService.register(user);
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto loginDto) {
         try {

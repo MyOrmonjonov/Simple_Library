@@ -32,7 +32,7 @@ public class MyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("token");
-
+        System.out.println(token+"salom");
         if (token != null) {
             if (jwtService.isValid(token)) {
                 String username = jwtService.getUsername(token);

@@ -16,8 +16,7 @@ public class Book extends BaseEntity{
     private Integer pages;
     @ManyToOne
     private Users borrowedBy;
-    @ManyToOne
-    private BookGenre genre;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Attachment attachment;
 }

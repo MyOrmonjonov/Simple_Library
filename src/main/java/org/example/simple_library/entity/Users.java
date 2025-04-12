@@ -2,7 +2,6 @@ package org.example.simple_library.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.example.simple_library.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
