@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Book Store - Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @keyframes floatBooks {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        body {
+            background: linear-gradient(135deg, #7fb3d5, #3498db);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .book-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .book {
+            position: absolute;
+            bottom: -100px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 24px;
+            animation: floatBooks 15s linear infinite;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #3498db, #85c1e9);
+        }
+
+        .container::after {
+            content: '📚';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+
+        h1 {
+            color: #2874a6;
+            margin-bottom: 30px;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .input-group:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .input-group:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2874a6;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #bde0fe;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        button {
+            background: linear-gradient(to right, #3498db, #2874a6);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+            animation: fadeIn 0.5s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+            color: #2874a6;
+            animation: fadeIn 0.5s ease-out 0.8s forwards;
+            opacity: 0;
+        }
+
+        .login-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .login-link a:hover {
+            color: #2874a6;
+            text-decoration: underline;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .book-icon {
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+<div class="book-animation">
+    <!-- Books will be added dynamically with JavaScript -->
+</div>
+
+<div class="container">
+    <h1><span class="book-icon">📚</span> Book Store Registration</h1>
+
+    <div id="statusMessage" class="status-message"></div>
+
+    <form id="registrationForm">
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            <div class="error-message" id="usernameError"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <div class="error-message" id="passwordError"></div>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="login.html">Log in</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('registrationForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const bookAnimation = document.querySelector('.book-animation');
+
+        // Create floating book emojis
+        const bookEmojis = ['📚', '📖', '📕', '📗', '📘', '📙', '🔖'];
+        const numberOfBooks = 20;
+
+        for (let i = 0; i < numberOfBooks; i++) {
+            const book = document.createElement('div');
+            book.className = 'book';
+            book.textContent = bookEmojis[Math.floor(Math.random() * bookEmojis.length)];
+            book.style.left = `${Math.random() * 100}%`;
+            book.style.animationDuration = `${15 + Math.random() * 10}s`;
+            book.style.animationDelay = `${Math.random() * 5}s`;
+            book.style.fontSize = `${24 + Math.random() * 24}px`;
+            bookAnimation.appendChild(book);
+        }
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+
+            // Username validation
+            const username = document.getElementById('username').value;
+            const usernameError = document.getElementById('usernameError');
+            if (username.length < 3) {
+                usernameError.textContent = 'Username must be at least 3 characters';
+                usernameError.style.display = 'block';
+                isValid = false;
+            } else {
+                usernameError.style.display = 'none';
+            }
+
+            // Password validation
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('passwordError');
+            if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters';
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                passwordError.style.display = 'none';
+            }
+
+            return isValid;
+        }
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const userData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+
+            // Show loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = 'Registering...';
+            submitButton.disabled = true;
+
+            // Make API request with Axios
+            axios.post('http://localhost:8080/api/auth/register', userData)
+                .then(function(response) {
+                    // Handle success
+                    statusMessage.textContent = 'Registration successful! Redirecting to login...';
+                    statusMessage.className = 'status-message success';
+                    statusMessage.style.display = 'block';
+
+                    // Add celebration animation
+                    for (let i = 0; i < 30; i++) {
+                        setTimeout(() => {
+                            const book = document.createElement('div');
+                            book.className = 'book';
+                            book.textContent = bookEmojis[Math.floor(Math.random() * bookEmojis.length)];
+                            book.style.left = `${Math.random() * 100}%`;
+                            book.style.animationDuration = `${5 + Math.random() * 5}s`;
+                            book.style.fontSize = `${24 + Math.random() * 24}px`;
+                            bookAnimation.appendChild(book);
+                        }, i * 100);
+                    }
+
+                    // Redirect to login page after 2 seconds
+                    setTimeout(function() {
+                        // Replace with your login page URL
+                        // window.location.href = 'register.html';
+                        console.log('Redirecting to login page...');
+                    }, 2000);
+                })
+                .catch(function(error) {
+                    // Handle error
+                    let errorMessage = 'Registration failed. Please try again.';
+
+                    // If the server returned an error message, use it
+                    if (error.response && error.response.data && error.response.data.message) {
+                        errorMessage = error.response.data.message;
+                    }
+
+                    statusMessage.textContent = errorMessage;
+                    statusMessage.className = 'status-message error';
+                    statusMessage.style.display = 'block';
+                })
+                .finally(function() {
+                    // Reset button state
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                });
+        });
+
+        // Add input animation
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-5px)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+</body>
+</html>
