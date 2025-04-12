@@ -51,7 +51,7 @@ public class SecurityConfig {
 
                 // Example: Admin-only
                 .requestMatchers("/api/books/**").hasRole("ADMIN")
-
+                .requestMatchers("/api/home/**").hasRole("USER")
                 .requestMatchers(HttpMethod.GET, "/api/books/**").hasRole("USER")
                 .requestMatchers(HttpMethod.GET, "/api/books/**").hasAnyRole("USER","ADMIN")
 

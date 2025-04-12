@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Book Store</title>
+    <title>My Borrowed Books - BookHaven</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -60,6 +60,31 @@
 
         .logo i {
             font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         .user-profile {
@@ -176,20 +201,16 @@
             transform: scale(1.05);
         }
 
-        .book-status {
+        .borrow-date {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background-color: var(--success);
+            background-color: var(--primary);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 500;
-        }
-
-        .book-status.borrowed {
-            background-color: var(--accent);
         }
 
         .book-details {
@@ -236,9 +257,9 @@
             margin-top: auto;
         }
 
-        .read-btn {
+        .return-btn {
             width: 100%;
-            background-color: var(--primary);
+            background-color: var(--accent);
             color: white;
             border: none;
             padding: 0.75rem 1rem;
@@ -252,16 +273,11 @@
             gap: 0.5rem;
         }
 
-        .read-btn:hover {
-            background-color: var(--primary-dark);
+        .return-btn:hover {
+            background-color: #e11d48;
         }
 
-        .read-btn:disabled {
-            background-color: var(--text-light);
-            cursor: not-allowed;
-        }
-
-
+        /* Loading State */
         .loading-container {
             display: flex;
             flex-direction: column;
@@ -320,6 +336,25 @@
             color: var(--text-light);
             max-width: 500px;
             margin-bottom: 1.5rem;
+        }
+
+        .browse-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .browse-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         /* Alert Messages */
@@ -429,32 +464,10 @@
             .logout-btn span {
                 display: none;
             }
-        }
-    </style>
-    <style>
-        #button {
-            background-color:red;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
-        }
 
-        #button:hover {
-            background-color: #45a049;
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        #button:focus {
-            outline: none;
+            .back-btn span {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -469,19 +482,21 @@
             <i class="fas fa-book-open"></i>
             <span>BookHaven</span>
         </div>
-        <div class="user-profile">
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar">U</div>
-                <span class="username" id="usernameDisplay">Username</span>
-            </div>
-            <div>
-                <button id="button">My Books</button>
-            </div>
-
-            <button class="logout-btn" id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
+        <div class="nav-actions">
+            <button class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Books</span>
             </button>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="username" id="usernameDisplay">Username</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
         </div>
     </div>
 </header>
@@ -489,14 +504,14 @@
 <!-- Main Content -->
 <main class="main">
     <h1 class="page-title">
-        <i class="fas fa-book"></i>
-        <span>Available Books</span>
+        <i class="fas fa-bookmark"></i>
+        <span>My Borrowed Books</span>
     </h1>
 
     <!-- Loading State -->
     <div class="loading-container" id="loadingContainer">
         <div class="loading-spinner"></div>
-        <p class="loading-text">Loading books...</p>
+        <p class="loading-text">Loading your books...</p>
     </div>
 
     <!-- Empty State -->
@@ -504,8 +519,12 @@
         <div class="empty-icon">
             <i class="fas fa-book-open"></i>
         </div>
-        <h2 class="empty-title">No books found</h2>
-        <p class="empty-text">There are no books available in the library at the moment. Please check back later.</p>
+        <h2 class="empty-title">No borrowed books</h2>
+        <p class="empty-text">You haven't borrowed any books yet. Browse our collection and find something you'd like to read!</p>
+        <button class="browse-btn" id="browseBtn">
+            <i class="fas fa-search"></i>
+            <span>Browse Books</span>
+        </button>
     </div>
 
     <!-- Book Grid -->
@@ -516,22 +535,21 @@
 <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-       let button=document.getElementById("button")
-        button.addEventListener("click", goToBorrowPage);
-        function goToBorrowPage() {
-            window.location.href = 'borrow.html'; // borrow.html sahifasiga o'tish
-        }
+        // API Base URL - replace with your actual API URL
         const API_BASE_URL = 'http://localhost:8080/api';
 
         // DOM Elements
         const userAvatar = document.getElementById('userAvatar');
         const usernameDisplay = document.getElementById('usernameDisplay');
         const logoutBtn = document.getElementById('logoutBtn');
+        const backBtn = document.getElementById('backBtn');
+        const browseBtn = document.getElementById('browseBtn');
         const loadingContainer = document.getElementById('loadingContainer');
         const emptyContainer = document.getElementById('emptyContainer');
         const bookGrid = document.getElementById('bookGrid');
         const alertContainer = document.getElementById('alertContainer');
 
+        // Check Authentication and decode token to get username
         function checkAuth() {
             const token = localStorage.getItem('token');
 
@@ -593,8 +611,8 @@
             }, 5000);
         }
 
-        // Fetch Books
-        async function fetchBooks() {
+        // Fetch Borrowed Books
+        async function fetchBorrowedBooks() {
             if (!checkAuth()) return;
 
             try {
@@ -606,16 +624,16 @@
 
                 const response = await axios({
                     method: 'GET',
-                    url: `${API_BASE_URL}/home/books`,
+                    url: `${API_BASE_URL}/home/books/my-borrowed`,
                     headers: {
                         'token': token
                     }
                 });
 
-                const books = response.data;
+                const borrowings = response.data;
 
-                if (books && books.length > 0) {
-                    displayBooks(books);
+                if (borrowings && borrowings.length > 0) {
+                    displayBorrowedBooks(borrowings);
                     bookGrid.style.display = 'grid';
                     emptyContainer.style.display = 'none';
                 } else {
@@ -623,8 +641,8 @@
                     emptyContainer.style.display = 'flex';
                 }
             } catch (error) {
-                console.error('Error fetching books:', error);
-                showAlert('Failed to load books. Please try again.', 'error');
+                console.error('Error fetching borrowed books:', error);
+                showAlert('Failed to load your borrowed books. Please try again.', 'error');
 
                 bookGrid.style.display = 'none';
                 emptyContainer.style.display = 'flex';
@@ -637,14 +655,20 @@
             }
         }
 
-        // Display Books
-        function displayBooks(books) {
+        // Display Borrowed Books
+        function displayBorrowedBooks(borrowings) {
             bookGrid.innerHTML = '';
 
-            books.forEach(book => {
-                const isBorrowed = book.borrowedBy !== null;
-                const statusClass = isBorrowed ? 'borrowed' : '';
-                const statusText = isBorrowed ? 'Borrowed' : 'Available';
+            borrowings.forEach(borrowing => {
+                const book = borrowing.book;
+
+                // Format borrow date
+                const borrowDate = new Date(borrowing.borrowDate);
+                const formattedDate = borrowDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
 
                 // Create book cover image URL
                 const coverImageUrl = book.attachment && book.attachment.id
@@ -654,66 +678,72 @@
                 const bookElement = document.createElement('div');
                 bookElement.className = 'book-card';
                 bookElement.innerHTML = `
-            <div class="book-cover">
-              <img src="${coverImageUrl}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/300x450?text=Error+Loading'">
-              <div class="book-status ${statusClass}">${statusText}</div>
-            </div>
-            <div class="book-details">
-              <h3 class="book-title">${book.title}</h3>
-              <p class="book-author">by ${book.author}</p>
-              <div class="book-meta">
-                <div>
-                  <i class="fas fa-file-alt"></i>
-                  <span>${book.pages} pages</span>
-                </div>
-                <div>
-                  <i class="fas fa-calendar-alt"></i>
-                  <span>ID: ${book.id}</span>
-                </div>
-              </div>
-              <div class="book-actions">
-                <button class="read-btn" onclick="readBook(${book.id})" ${isBorrowed ? 'disabled' : ''}>
-                  <i class="fas fa-book-reader"></i>
-                  <span>To Read</span>
-                </button>
-              </div>
-            </div>
-          `;
+                    <div class="book-cover">
+                        <img src="${coverImageUrl}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/300x450?text=Error+Loading'">
+                        <div class="borrow-date">Borrowed: ${formattedDate}</div>
+                    </div>
+                    <div class="book-details">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">by ${book.author}</p>
+                        <div class="book-meta">
+                            <div>
+                                <i class="fas fa-file-alt"></i>
+                                <span>${book.pages} pages</span>
+                            </div>
+                            <div>
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>ID: ${book.id}</span>
+                            </div>
+                        </div>
+                        <div class="book-actions">
+                            <button class="return-btn" onclick="returnBook(${borrowing.id})">
+                                <i class="fas fa-undo-alt"></i>
+                                <span>Return Book</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
 
                 bookGrid.appendChild(bookElement);
             });
         }
 
-        // Read Book Function - Simplified to just send the book ID
-        window.readBook = function(bookId) {
+        // Return Book Function
+        window.returnBook = function(borrowingId) {
             if (!checkAuth()) return;
 
             const token = localStorage.getItem('token');
 
-            // The backend will extract the user ID from the token
-            // and create the borrowing object with the current date
             axios({
                 method: 'POST',
-                url: `${API_BASE_URL}/home/books/${bookId}/borrow`,
-                // No data needed - the backend will handle everything based on the book ID and token
+                url: `${API_BASE_URL}/home/books/return/${borrowingId}`,
                 headers: {
                     'token': token,
                     'Content-Type': 'application/json'
                 }
             })
                 .then(response => {
-                    showAlert('Book added to your reading list!', 'success');
-                    fetchBooks(); // Refresh the book list
+                    showAlert('Book returned successfully!', 'success');
+                    fetchBorrowedBooks(); // Refresh the book list
                 })
                 .catch(error => {
-                    console.error('Error borrowing book:', error);
-                    showAlert('Failed to borrow book. Please try again.', 'error');
+                    console.error('Error returning book:', error);
+                    showAlert('Failed to return book. Please try again.', 'error');
 
                     if (error.response && error.response.status === 401) {
                         window.location.href = 'login.html';
                     }
                 });
         };
+
+        // Navigation
+        backBtn.addEventListener('click', function() {
+            window.location.href = 'home.html';
+        });
+
+        browseBtn.addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
 
         // Logout Function
         logoutBtn.addEventListener('click', function() {
@@ -723,7 +753,7 @@
 
         // Initialize
         if (checkAuth()) {
-            fetchBooks();
+            fetchBorrowedBooks();
         }
     });
 </script>

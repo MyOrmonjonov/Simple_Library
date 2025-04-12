@@ -2,8 +2,7 @@ package org.example.simple_library.servic;
 
 import org.example.simple_library.entity.Attachment;
 import org.example.simple_library.repo.AttachmentRepository;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

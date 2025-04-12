@@ -23,7 +23,6 @@ public class AdminController {
         this.bookRepository = bookRepository;
     }
 
-    // Get all books
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
